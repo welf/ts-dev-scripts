@@ -1,0 +1,28 @@
+{
+  "name": "ts-dev-scripts",
+  "version": "1.0.0",
+  "description": "AST (Abstract Syntax Tree) transformation scripts to automate tedious tasks in large TypeScript codebases",
+  "main": "dist/index.js",
+  "scripts": {
+    "find:console": "ts-node ./scripts/no-console.ts --glob='./(src|apps|libs)/**/!(*.test|*.spec).(ts|tsx)'",
+    "find:unused-exports": "ts-node ./scripts/no-unused-exports.ts --glob='./(src|apps|libs|test)/**/*.(ts|tsx)'",
+    "remove:console": "ts-node ./scripts/no-console.ts --glob='./(src|apps|libs)/**/!(*.test|*.spec).(ts|tsx)' --fix",
+    "remove:unused-exports": "ts-node ./scripts/no-unused-exports.ts --glob='./(src|apps|libs|test)/**/*.(ts|tsx)' --fix"
+  },
+  "keywords": [
+    "typescript",
+    "ts-morph",
+    "AST transformation scripts",
+    "Abstract Syntax Tree transformation scripts",
+    "codemods",
+    "developer",
+    "tools"
+  ],
+  "author": "Arthur Welf",
+  "license": "ISC",
+  "devDependencies": {
+    "ts-morph": "^23.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.3"
+  }
+}
