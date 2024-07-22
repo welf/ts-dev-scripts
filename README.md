@@ -58,4 +58,4 @@ This script finds all the exports with no references in other files and removes 
 
 **NOTE:** Let the script traverse all your codebase. If you exclude some directories, the script will not be able to check for an external reference of the exported declaration in excluded files. This can result in false positives.
 
-**NOTE:** The script **will not remove** the unused exported declarations. It only removes the `export` keyword from the declaration and leaves the declaration in the codebase even if it has no local references itself. Set the `noUnusedLocals` option in the `compilerOptions` in `tsconfig.json` to `true` to let the TypeScript compiler notify you about unused declarations after the script has removed the `export` keyword from them.
+**NOTE:** The script **will not remove** the unused exported declarations. It only removes the `export` keyword from the declaration and leaves the declaration in the codebase even if it has no references at all. Set the `noUnusedLocals` option in the `compilerOptions` in `tsconfig.json` to `true` to let the TypeScript compiler notify you about unused declarations after the script had removed the `export` keyword from them.
