@@ -6,7 +6,7 @@ interface ConsoleTableEntry {
   ["Statement"]: string;
 }
 
-const main = async (glob: string, fix?: boolean) => {
+const main = async (glob: string, fix: boolean) => {
   // If no file glob was provided, print an error message with an example of how to use the script
   if (!glob) {
     console.error(
