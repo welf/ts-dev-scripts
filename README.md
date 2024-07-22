@@ -1,5 +1,14 @@
 # TypeScript Developer Tools
 
+## Table of content
+
+- [Description](#description)
+- [Usage](#usage)
+  - [Common patterns in scripts usage](#common-patterns-in-scripts-usage)
+- [Scripts](#scripts)
+  - [`no-console`](#no-console)
+  - [`no-unused-exports`](#no-unused-exports)
+
 ## Description
 
 A collection of AST ([Abstract Syntax Tree](https://en.wikipedia.org/wiki/Abstract_syntax_tree)) transformation scripts to automate tedious tasks in TypeScript codebases.
@@ -44,13 +53,21 @@ Here are some common patterns used in any script:
 
 ### [`no-console`](./scripts/no-console.ts)
 
+<details>
+  <summary>Details</summary>
+
 Parses the code to the Abstract Syntax Tree and traverses all its nodes to find `console.*` calls.
 
 If you don't pass the `--fix` parameter, it will only print the table with files and line numbers where the `console` calls are found.
 
 Pass the `--fix` parameter to remove all `console` calls from the codebase. The script will notify you about the changes it made.
 
+</details>
+
 ### [`no-unused-exports`](./scripts/no-console.ts)
+
+<details>
+  <summary>Details</summary>
 
 Although you can add to the `compilerOptions` in `tsconfig.json` the `noUnusedLocals` option, developers often bypass it by exporting unused variables, classes, enums, interfaces, etc. As your codebase grows, the number of unused exports will grow too.
 
@@ -59,3 +76,5 @@ This script finds all the exports with no references in other files and removes 
 **NOTE:** Let the script traverse all your codebase. If you exclude some directories, the script will not be able to check for an external reference of the exported declaration in excluded files. This can result in false positives.
 
 **NOTE:** The script **will not remove** the unused exported declarations. It only removes the `export` keyword from the declaration and leaves the declaration in the codebase even if it has no references at all. Set the `noUnusedLocals` option in the `compilerOptions` in `tsconfig.json` to `true` to let the TypeScript compiler notify you about unused declarations after the script had removed the `export` keyword from them.
+
+</details>
