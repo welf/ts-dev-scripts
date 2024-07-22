@@ -21,7 +21,7 @@ Then copy the script you want to use to your project. I suggest you to put scrip
 ```json
 {
   "compilerOptions": {
-    ...
+    // ...
   },
   "exclude": ["node_modules", "dist", "scripts"]
 }
@@ -42,7 +42,7 @@ Here are some common patterns used in any script:
 
 ## Scripts
 
-### [`no-console`](no-console.ts)
+### [`no-console`](./scripts/no-console.ts)
 
 Parses the code to the Abstract Syntax Tree and traverses all its nodes to find `console.*` calls.
 
@@ -50,7 +50,7 @@ If you don't pass the `--fix` parameter, it will only print the table with files
 
 Pass the `--fix` parameter to remove all `console` calls from the codebase. The script will notify you about the changes it made.
 
-### [`no-unused-exports`](no-unused-exports.ts)
+### [`no-unused-exports`](./scripts/no-console.ts)
 
 Although you can add to the `compilerOptions` in `tsconfig.json` the `noUnusedLocals` option, developers often bypass it by exporting unused variables, classes, enums, interfaces, etc. As your codebase grows, the number of unused exports will grow too.
 
