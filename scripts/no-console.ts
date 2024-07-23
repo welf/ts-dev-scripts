@@ -1,9 +1,9 @@
 import { Node, Project } from 'ts-morph';
 
 interface ConsoleTableEntry {
-  "File": string;
-  "Line": number;
-  "Statement": string;
+  File: string;
+  Line: number;
+  Statement: string;
 }
 
 const main = async (glob: string, fix: boolean) => {

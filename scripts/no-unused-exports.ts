@@ -6,10 +6,10 @@ import {
 } from "ts-morph";
 
 interface ConsoleTableEntry {
-  "File": string;
-  "Line": number;
-  "Type": string;
-  "Name": string;
+  File: string;
+  Line: number;
+  Type: string;
+  Name: string;
 }
 
 interface DeclarationEntry extends ConsoleTableEntry {
