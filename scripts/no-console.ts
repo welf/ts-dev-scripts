@@ -1,9 +1,9 @@
 import { Node, Project } from 'ts-morph';
 
 interface ConsoleTableEntry {
-  ["File"]: string;
-  ["Line"]: number;
-  ["Statement"]: string;
+  "File": string;
+  "Line": number;
+  "Statement": string;
 }
 
 const main = async (glob: string, fix: boolean) => {
@@ -35,8 +35,9 @@ const main = async (glob: string, fix: boolean) => {
   const table: ConsoleTableEntry[] = [];
 
   // Walk through all source files
+  // biome-ignore lint/complexity/noForEach: for..of supports in ES2015+ only
   project.getSourceFiles().forEach(async (sourceFile) => {
-    const path = "." + sourceFile.getFilePath().split(rootDirectoryPath)[1];
+    const path = `.${sourceFile.getFilePath().split(rootDirectoryPath)[1]}`;
     console.log(`Checking ${path}...`);
     // Walk through all descendants of the source file
     sourceFile.forEachDescendant((node, _traversal) => {
@@ -47,12 +48,12 @@ const main = async (glob: string, fix: boolean) => {
         // Check if the expression starts with "console."
         if (expression.getText().startsWith("console.")) {
           // Here is a workaround to get the relative path of the file
-          const relativePathToSourceFile = "." + sourceFile.getFilePath().split(rootDirectoryPath)[1];
+          const relativePathToSourceFile = `.${sourceFile.getFilePath().split(rootDirectoryPath)[1]}`;
           // Push the relative path of the file, line number, and the console statement to the table
           table.push({
-            ["File"]: relativePathToSourceFile,
-            ["Line"]: node.getStartLineNumber(),
-            ["Statement"]: expression.getText().split("(")[0],
+            File: relativePathToSourceFile,
+            Line: node.getStartLineNumber(),
+            Statement: expression.getText().split("(")[0],
           });
 
           // If expression contains `console.`, and if the `--fix` argument was passed to the script, remove the expression statement

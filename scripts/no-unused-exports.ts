@@ -1,10 +1,15 @@
-import { ExportedDeclarations, Node, Project, SourceFile } from 'ts-morph';
+import {
+  type ExportedDeclarations,
+  Node,
+  Project,
+  type SourceFile,
+} from "ts-morph";
 
 interface ConsoleTableEntry {
-  ["File"]: string;
-  ["Line"]: number;
-  ["Type"]: string;
-  ["Name"]: string;
+  "File": string;
+  "Line": number;
+  "Type": string;
+  "Name": string;
 }
 
 interface DeclarationEntry extends ConsoleTableEntry {
@@ -26,7 +31,7 @@ const main = async (glob: string, fix: boolean) => {
     // Specify the path to the tsconfig.json file
     tsConfigFilePath: "./tsconfig.json",
     // Skip adding files from the tsconfig.json file because we add them manually later
-    skipAddingFilesFromTsConfig: true
+    skipAddingFilesFromTsConfig: true,
   });
 
   // Add source files where to search for unused entities
@@ -39,12 +44,14 @@ const main = async (glob: string, fix: boolean) => {
   const unusedExports: ConsoleTableEntry[] = [];
 
   // Walk through all source files
+  // biome-ignore lint/complexity/noForEach: for..of supports in ES2015+ only
   project.getSourceFiles().forEach((sourceFile) => {
     const unusedExportDeclarations = getUnusedExportDeclarations(
       sourceFile,
-      rootDirectoryPath
+      rootDirectoryPath,
     );
 
+    // biome-ignore lint/complexity/noForEach: for..of supports in ES2015+ only
     unusedExportDeclarations.forEach((declarationEntry) => {
       const { declaration, ...rest } = declarationEntry;
 
@@ -70,7 +77,6 @@ const main = async (glob: string, fix: boolean) => {
     });
 
     !sourceFile.isSaved() && sourceFile.save();
-
   });
 
   if (unusedExports.length === 0) {
@@ -79,7 +85,9 @@ const main = async (glob: string, fix: boolean) => {
   }
 
   if (unusedExports.length > 0 && !fix) {
-    console.warn("The following exports have no external references and the export keyword can be removed:");
+    console.warn(
+      "The following exports have no external references and the export keyword can be removed:",
+    );
     console.table(unusedExports);
     console.warn("Pass the --fix flag to the script to remove unused exports");
     return;
@@ -94,19 +102,21 @@ const main = async (glob: string, fix: boolean) => {
 
 const getUnusedExportDeclarations = (
   sourceFile: SourceFile,
-  rootDirectoryPath: string): DeclarationEntry[] => {
+  rootDirectoryPath: string,
+): DeclarationEntry[] => {
   const unusedExports: DeclarationEntry[] = [];
 
   // Walk through all exported entities of the source file
   sourceFile.getExportedDeclarations().forEach((declarations, name) => {
     // Walk through all declarations of the exported entity
-    declarations.forEach(declaration => {
+    // biome-ignore lint/complexity/noForEach: for..of supports in ES2015+ only
+    declarations.forEach((declaration) => {
       // Check if the declaration is reference findable
       if (Node.isReferenceFindable(declaration)) {
         // Check if the declaration has at least one external reference
         const hasExternalReference = declaration
           .findReferencesAsNodes()
-          .some(reference => reference.getSourceFile() !== sourceFile);
+          .some((reference) => reference.getSourceFile() !== sourceFile);
 
         // If the declaration has at least one external reference, skip it
         if (hasExternalReference) {
@@ -114,14 +124,14 @@ const getUnusedExportDeclarations = (
         }
 
         // Here is a workaround to get the relative path of the file to the root directory
-        const relativePathToSourceFile = '.' + sourceFile.getFilePath().split(rootDirectoryPath)[1];
+        const relativePathToSourceFile = `.${sourceFile.getFilePath().split(rootDirectoryPath)[1]}`;
 
         unusedExports.push({
           File: relativePathToSourceFile,
           Line: declaration.getStartLineNumber(),
           Type: declaration.getKindName(),
           Name: name,
-          declaration
+          declaration,
         });
       }
     });
@@ -132,13 +142,16 @@ const getUnusedExportDeclarations = (
 
 const getRootDirectoryPath = (project: Project): string => {
   try {
-    return project.getRootDirectories()[0]
+    return project
+      .getRootDirectories()[0]
       .getPath()
       .split("/")
       .slice(0, -1)
       .join("/");
   } catch (error) {
-    console.error("Failed to get the root directory path. Check the --glob argument passed and try again");
+    console.error(
+      "Failed to get the root directory path. Check the --glob argument passed and try again",
+    );
     process.exit(1);
   }
 };
@@ -146,7 +159,7 @@ const getRootDirectoryPath = (project: Project): string => {
 // get arguments from the command line
 const args: string[] = process.argv.slice(2);
 // get the glob argument
-const glob = args.find(arg => arg.startsWith("--glob="))?.split("=")[1] ?? "";
+const glob = args.find((arg) => arg.startsWith("--glob="))?.split("=")[1] ?? "";
 // get the --fix argument
 const fix = args.includes("--fix");
 
