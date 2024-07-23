@@ -1,6 +1,6 @@
 # TypeScript Developer Tools
 
-## Table of content
+## Table of contents
 
 - [Description](#description)
 - [Usage](#usage)
