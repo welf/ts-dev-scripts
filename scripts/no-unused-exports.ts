@@ -24,7 +24,7 @@ const main = async (glob: string, fix: boolean) => {
   // Create a new project instance
   const project = new Project({
     // Specify the path to the tsconfig.json file
-    tsConfigFilePath: './tsconfig.json',
+    tsConfigFilePath: "./tsconfig.json",
     // Skip adding files from the tsconfig.json file because we add them manually later
     skipAddingFilesFromTsConfig: true
   });
@@ -53,13 +53,14 @@ const main = async (glob: string, fix: boolean) => {
 
       // If the --fix or --removeUnusedExportsOnly flag is set to true, remove the export from the declaration
       if (fix) {
-        const { ["Name"]: name } = declarationEntry;
+        const { Name: name } = declarationEntry;
 
         // Get the grandparent of the declaration if it is a variable declaration
         // because the variable declaration is wrapped in a variable statement
-        const decl = declaration.getKindName() === "VariableDeclaration"
-          ? declaration.getParent()?.getParent()
-          : declaration;
+        const decl =
+          declaration.getKindName() === "VariableDeclaration"
+            ? declaration.getParent()?.getParent()
+            : declaration;
 
         if (decl && Node.isExportable(decl)) {
           console.warn(`Removing export from ${decl.getKindName()} ${name}`);
@@ -97,7 +98,7 @@ const getUnusedExportDeclarations = (
   const unusedExports: DeclarationEntry[] = [];
 
   // Walk through all exported entities of the source file
-  for (const [name, declarations] of sourceFile.getExportedDeclarations()) {
+  sourceFile.getExportedDeclarations().forEach((declarations, name) => {
     // Walk through all declarations of the exported entity
     declarations.forEach(declaration => {
       // Check if the declaration is reference findable
@@ -116,15 +117,15 @@ const getUnusedExportDeclarations = (
         const relativePathToSourceFile = '.' + sourceFile.getFilePath().split(rootDirectoryPath)[1];
 
         unusedExports.push({
-          ["File"]: relativePathToSourceFile,
-          ["Line"]: declaration.getStartLineNumber(),
-          ["Type"]: declaration.getKindName(),
-          ["Name"]: name,
+          File: relativePathToSourceFile,
+          Line: declaration.getStartLineNumber(),
+          Type: declaration.getKindName(),
+          Name: name,
           declaration
         });
       }
     });
-  }
+  });
 
   return unusedExports;
 };
@@ -143,7 +144,7 @@ const getRootDirectoryPath = (project: Project): string => {
 };
 
 // get arguments from the command line
-const args = process.argv.slice(2);
+const args: string[] = process.argv.slice(2);
 // get the glob argument
 const glob = args.find(arg => arg.startsWith("--glob="))?.split("=")[1] ?? "";
 // get the --fix argument
